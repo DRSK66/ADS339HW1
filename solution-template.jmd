@@ -1,6 +1,6 @@
 ---
 title: "BEE 4750/5750 Homework 1"
-author: "Andrew Scacchi (ADS339) updated"
+author: "Andrew Scacchi (ADS339)"
 date: `j import Dates; Dates.Date(Dates.now())`
 weave_options:
     term: true
