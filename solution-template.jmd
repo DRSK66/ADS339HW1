@@ -1,6 +1,6 @@
 ---
 title: "BEE 4750/5750 Homework 1"
-author: "Your name here (your netID here)"
+author: "Andrew Scacchi (ADS339)"
 date: `j import Dates; Dates.Date(Dates.now())`
 weave_options:
     term: true
