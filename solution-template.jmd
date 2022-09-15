@@ -168,4 +168,8 @@ therefore it should be noted that these are all approximations.
 https://docs.juliaplots.org/latest/graphrecipes/examples/ --> help with edge labeling
 Cornell Dyson School --> Teaching me economic theory
 https://docs.julialang.org/en/v1/ --> general help with troubleshooting
+<<<<<<< HEAD
 Professor Vivek Srikrishnan for his solution template, and accompanying code examples. 
+=======
+Professor Vivek Srikrishnan for his solution template, and accompanying code examples. 
+>>>>>>> 4cc82dc82f546c17061231f0a970a3b8f029ca2c
