@@ -38,9 +38,9 @@ ypos = [1, 0, 0, -1]
 edgelabel_dict = Dict()
 edgelabel_dict[(1,2)] = "X1\n(kg/Day)"
 edgelabel_dict[(1,3)] = "X2\n(kg/Day)"
-edgelabel_dict[(1,4)] = "No Treatment\nX3"
-edgelabel_dict[(2,4)] = "Discharge =\n0.2*X1"
-edgelabel_dict[(3,4)] = "Discharge =\n0.005*X2"
+edgelabel_dict[(1,4)] = "No Treatment\nX3= Y3"
+edgelabel_dict[(2,4)] = "Discharge (Y1) =\n0.2*X1"
+edgelabel_dict[(3,4)] = "Discharge (Y2) =\n0.005*X2"
 graphplot(A, names=names, edgelabel=edgelabel_dict, markersize=0.15, markershapes=shapes, markercolor=:white, x=xpos, y=ypos)
 ```
 
@@ -89,18 +89,76 @@ function optimizeDischarge(X1,X2)
 
 	return pristineWaste, costTotal
 end  
-```
-a, b = optimizeDischarge(20, 50)
-println("Pollution:", a)
-println("Cost:", b)
 
+a, b = optimizeDischarge(13, 70)
+println("Pollution:", a," kg/day of YUK")
+println("Cost:", b, " dollars/day")
+```
 
 ## Problem 1.4
+```julia
+
+X1Possible = 1:100
+X2Possible = 1:100
+#sample = zeros(length(X1), length(X2))
+n=length(X1Possible)
+wasteArray= zeros(100,100)
+cost_ultimate= zeros(100,100)
+for i in 1:n
+    for j in i:n
+
+        Q1 = X1Possible[i]
+        Q2 = X2Possible[j]
+        Q3 =100-X1Possible[i] -X2Possible[j]
+
+        if (Q1 + Q2 <= 100) && (0.2*Q1 + 0.005*Q2 +Q3 <=20)
+       wasteArray[i,j], cost_ultimate[i,j] = optimizeDischarge(Q1,Q2)
+       end
+       if 19.9<=(.2*Q1 + .005*Q2 + Q3) <=20
+       println("Q1:",Q1)
+       println("Q2:",Q2)
+       end
+    end
+end
+
+using Plots
+scatter(wasteArray, cost_ultimate, legend = false, 
+title= "YUK Concentrations and Associated Costs\nof Possible Abatement Strategies",
+xlabel = "kg/day of YUK runoff", ylabel= "Cost per Day (USD)")
+```
+
+## What was noticed??
+In the plot that was output, there appears to be a series of pollution bands that run parralel to each other. This "hooked"
+shape repeats at every integer value of pollution emissions, and starts going down slightly before shooting up. Furthermore,
+the lowpoint of each "hook", representing the associated cost, decreases slightly every iteration, signifying that less 
+abatement is cheaper, which is to be expected.
 
 ## Problem 1.5
+Based on Economic principles, the most efficient allocation of resources occurs at the margins, meaning that a business 
+like Cheap Plastic Products INC can be expected to pollute at exactly the amount allowed, which in this case is 20kg/day. 
+Using the Plot from part 4, we see that 3 such integer combinations occur for (X1,X2): [3,78], [8,74], and [13,70]. 
+Cheap Plastic Products could then plug these values into the "Optimize Discharge" function above, to determine which
+is the most cost effective option, which ends up being [13,70], emitting 19.95kg a day at a cost of $113.45. It should be 
+noted that for this model only integers were used, and as such values will not be exact due to rounding. If we used
+more exact numbers, the cheapest option could have been expected to emit exactly 20kg. However, if the public 
+and regulatory agencies would still prefer less pollution, they could subequently lower the limit further and 
+force the factory to abate at a different combination that yeilds the new desired limit. 
+
+My numerical setup did not influence my conclusions at all, besides the rounding error noted above, since all possible 
+allocations of abatement were analyzed and the most cost effective ones that are legal were able to be identified quantitatively.
+Therefore, a differen experimental design would have been unlikely to ellicit bias in the output.
+
 
 ## Problem 1.6
-
-## Problem 1.7
+To improve my model, a few things could be done:
+1) Learn about the externalities to public welfare associated with additional pollution. This would allow for further modeling 
+to identify what the ideal pollution limit should be, and then the model can be rerun targeting that new limit that increases
+public welfare.
+2) Implement floating point numbers, instead of integers, so that more precise values can be determined for abatement strategies.
+If that were the case, then I am confident that the cheapest possible combination would pollute exactly 20kg/day. This 
+assumption of only integer values of pollution being remediated via each method should be kept in mind.
+3) This model assumed that the costs of abatement would be constant, pollution streams homogenous, and remediation
+methods such as the soil absorbing pollution being constant. None of these would be true in the real world, and
+therefore it should be noted that these are all approximations.
 
 # References
