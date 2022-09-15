@@ -31,7 +31,8 @@ A = [0 1 1 1;
 		 0 0 0 1;
    	 	 0 0 0 0]
 	
-names = ["Discharge\nSource", "Land Treatment Method\nCost= (X1^2)/20", "Chem Treatment\nCost= 1.5*X2", "Pristine Brook\nYUK:20kg/day"]
+names = ["CPP's Factory\n YUK:100 kg/day", "Land Treatment Method\nCost= (X1^2)/20",
+ "Chem Treatment\nCost= 1.5*X2", "Pristine Brook\nYUK:20kg/day"]
 shapes=[:hexagon, :rect, :rect, :hexagon]
 xpos = [0, -1.75, -.25, 1.5]
 ypos = [1, 0, 0, -1]
@@ -39,15 +40,17 @@ edgelabel_dict = Dict()
 edgelabel_dict[(1,2)] = "X1\n(kg/Day)"
 edgelabel_dict[(1,3)] = "X2\n(kg/Day)"
 edgelabel_dict[(1,4)] = "No Treatment\nX3= Y3"
-edgelabel_dict[(2,4)] = "Discharge (Y1) =\n0.2*X1"
-edgelabel_dict[(3,4)] = "Discharge (Y2) =\n0.005*X2"
-graphplot(A, names=names, edgelabel=edgelabel_dict, markersize=0.15, markershapes=shapes, markercolor=:white, x=xpos, y=ypos)
+edgelabel_dict[(2,4)] = "Discharge (Y1)\n= 0.2*X1"
+edgelabel_dict[(3,4)] = "Discharge (Y2)\n= 0.005*X2"
+graphplot(A, names=names, edgelabel=edgelabel_dict, markersize=0.15, markershapes=shapes, 
+title="Network Sketch of Cheap Plastic Products'\nRemediation Strategies",markercolor=:white, x=xpos, y=ypos)
 ```
 
 ## Problem 1.2
 
 First, all units need to be standardized via unit conversion from volume to mass to allow for compatability
-between equations.
+between equations. While in this case this isn't necessary since the density is 1kg/m^3, in other cases this would be necessary.
+
 ```math
 Limit1 = 100 m^3/day waste water\\
 Conversion = 1 kg YUK/m^3 waste water\\
@@ -55,20 +58,21 @@ Limit1 = Limit1 * Conversion\\
 ```
 
 The next step to this model is defining the overarching limitations. These include all 3 disposal methods adding 
-up to the 100m^3/day of effluent, and the treated runoff totalling less than 20kg/day of yuck.
+up to the 100m^3/day of effluent, and the treated runoff totalling less than or equal to 20kg/day of YUK.
+
 ```math
-X1 + X2 + X3 = Limit1\\
-Y1 = .2*(X1)\\
-Y2 = 0.005(X2)\\
-Y3 = X3\\
-Y1 + Y2 + Y3 = 20 kg/day\\
+X1 + X2 + X3 = Limit1 
+Y1 = .2*(X1)
+Y2 = 0.005(X2)
+Y3 = X3
+Y1 + Y2 + Y3 = 20 kg/day
 ```
 Lastly, we can use these limitations and the cost of each treatment method to create a system of equations that can be
-used to find the cheapest possible allocation that fits the above constraints
+used to find the cheapest possible allocation that fits the above constraints.
 ```math
-Cost1 = ((X1)^2)/20\\
-Cost2 = 1.5*X2\\
-CostTotal = Cost1 +Cost2\\
+Cost1 = ((X1)^2)/20
+Cost2 = 1.5*X2
+CostTotal = Cost1 +Cost2
 ```
 
 ## Problem 1.3
@@ -100,10 +104,9 @@ println("Cost:", b, " dollars/day")
 
 X1Possible = 1:100
 X2Possible = 1:100
-#sample = zeros(length(X1), length(X2))
 n=length(X1Possible)
-wasteArray= zeros(100,100)
-cost_ultimate= zeros(100,100)
+wasteArray= zeros(n,n)
+cost_ultimate= zeros(n,n)
 for i in 1:n
     for j in i:n
 
@@ -162,3 +165,7 @@ methods such as the soil absorbing pollution being constant. None of these would
 therefore it should be noted that these are all approximations.
 
 # References
+https://docs.juliaplots.org/latest/graphrecipes/examples/ --> help with edge labeling
+Cornell Dyson School --> Teaching me economic theory
+https://docs.julialang.org/en/v1/ --> general help with troubleshooting
+Professor Vivek Srikrishnan for his solution template, and accompanying code examples. 
